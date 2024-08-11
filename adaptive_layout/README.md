@@ -1,25 +1,31 @@
 Provides adaptive layout sizes for creating responsive design
 
-## Features
-
-TODO: List what your package can do. Maybe include images, gifs, or videos.
-
 ## Getting started
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+Add package dependency in your project:
+```yaml
+dependencies:
+  adaptive_layout:
+    git:
+      url: https://github.com/pintusingh28/flutter-packages
+      path: adaptive_layout
+```
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
-
+Wrap your app with `AdaptiveLayout` widget.
 ```dart
-const like = 'sample';
+runApp(
+  AdaptiveLayout.fromView(
+    child: MyApp(),
+  ),
+);
 ```
 
-## Additional information
+```dart
+// retrieve layout data
+final layoutData = AdaptiveLayout.of(context);
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+// retrieve layout type
+final layoutType = AdaptiveLayout.layoutTypeOf(context);
+```
