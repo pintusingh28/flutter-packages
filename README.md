@@ -4,5 +4,5 @@ This repo contains useful flutter packages which make your development process m
 
 ### Included Packages:
 
-- [screen_layout](screen_layout)
-- [ui_components](ui_components)
+- [adaptive_layout](adaptive_layout) - Provides adaptive layout sizes for creating responsive design
+- [ui_components](ui_components) - Ui components required for developing full-fledged flutter app.
