@@ -1,6 +1,6 @@
 name: adaptive_layout
 description: "Provides adaptive layout sizes for creating responsive design"
-version: 0.0.1
+version: 0.0.1+1
 repository: https://github.com/pintusingh28/flutter-packages/tree/main/adaptive_layout
 issue_tracker: https://github.com/pintusingh28/flutter-packages/issues
 
