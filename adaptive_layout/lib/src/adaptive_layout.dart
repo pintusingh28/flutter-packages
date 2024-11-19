@@ -7,7 +7,6 @@ import 'breakpoints.dart';
 import 'layout_type.dart';
 
 const _kSpacing = 8;
-const _kMargin = 8;
 
 /// Specifies a part of [AdaptiveLayoutData] to depend on.
 ///
@@ -20,6 +19,9 @@ enum _AdaptiveLayoutAspect {
 
   /// Specifies the aspect corresponding to [AdaptiveLayoutData.margin].
   margin,
+
+  /// Specifies the aspect corresponding to [AdaptiveLayoutData.padding].
+  padding,
 
   /// Specifies the aspect corresponding to [AdaptiveLayoutData.spacing].
   spacing;
@@ -45,6 +47,7 @@ class AdaptiveLayoutData {
   const AdaptiveLayoutData({
     required this.layoutType,
     required this.margin,
+    required this.padding,
     required this.spacing,
   });
 
@@ -71,27 +74,32 @@ class AdaptiveLayoutData {
     return switch (availableWidth) {
       < AdaptiveLayoutBreakpoints.compat => const AdaptiveLayoutData(
           layoutType: AdaptiveLayoutType.compact,
-          margin: _kMargin * 2,
+          margin: _kSpacing * 2,
+          padding: _kSpacing * 2,
           spacing: _kSpacing * 2,
         ),
       < AdaptiveLayoutBreakpoints.medium => const AdaptiveLayoutData(
           layoutType: AdaptiveLayoutType.medium,
-          margin: _kMargin * 3,
+          margin: _kSpacing * 3,
+          padding: _kSpacing * 3,
           spacing: _kSpacing * 3,
         ),
       < AdaptiveLayoutBreakpoints.expanded => const AdaptiveLayoutData(
           layoutType: AdaptiveLayoutType.expanded,
-          margin: _kMargin * 3,
+          margin: _kSpacing * 3,
+          padding: _kSpacing * 3,
           spacing: _kSpacing * 3,
         ),
       < AdaptiveLayoutBreakpoints.large => const AdaptiveLayoutData(
           layoutType: AdaptiveLayoutType.large,
-          margin: _kMargin * 4,
+          margin: _kSpacing * 4,
+          padding: _kSpacing * 3,
           spacing: _kSpacing * 3,
         ),
       _ => const AdaptiveLayoutData(
           layoutType: AdaptiveLayoutType.extraLarge,
-          margin: _kMargin * 4,
+          margin: _kSpacing * 4,
+          padding: _kSpacing * 3,
           spacing: _kSpacing * 3,
         )
     };
@@ -111,6 +119,13 @@ class AdaptiveLayoutData {
   ///  * [AdaptiveLayout.marginOf], a method to find and depend on the margin defined for a [BuildContext].
   final double margin;
 
+  /// The recommended padding for widgets.
+  ///
+  /// See also:
+  ///
+  ///  * [AdaptiveLayout.paddingOf], a method to find and depend on the margin defined for a [BuildContext].
+  final double padding;
+
   /// The recommended space between two widgets horizontally & vertically.
   ///
   /// See also:
@@ -122,12 +137,13 @@ class AdaptiveLayoutData {
   AdaptiveLayoutData copyWith({
     AdaptiveLayoutType? type,
     double? margin,
+    double? padding,
     double? spacing,
-    double? breakpoint,
   }) {
     return AdaptiveLayoutData(
       layoutType: type ?? layoutType,
       margin: margin ?? this.margin,
+      padding: padding ?? this.padding,
       spacing: spacing ?? this.spacing,
     );
   }
@@ -140,6 +156,7 @@ class AdaptiveLayoutData {
     return other is AdaptiveLayoutData &&
         other.layoutType == layoutType &&
         other.margin == margin &&
+        other.padding == padding &&
         other.spacing == spacing;
   }
 
@@ -147,6 +164,7 @@ class AdaptiveLayoutData {
   int get hashCode => Object.hashAll([
         layoutType,
         margin,
+        padding,
         spacing,
       ]);
 
@@ -155,6 +173,7 @@ class AdaptiveLayoutData {
     final List<String> properties = <String>[
       'type: $layoutType',
       'margin: $margin',
+      'padding: $padding',
       'gutter: $spacing',
     ];
     return '${objectRuntimeType(this, 'AdaptiveLayoutData')}(${properties.join(', ')})';
@@ -338,6 +357,24 @@ class AdaptiveLayout extends InheritedModel<_AdaptiveLayoutAspect> {
     return _maybeOf(context, _AdaptiveLayoutAspect.margin)?.margin;
   }
 
+  /// Returns [AdaptiveLayoutData.padding] for the nearest [AdaptiveLayoutData] ancestor or throws an exception, if no
+  /// such ancestor exists.
+  ///
+  /// Use of this method will cause the given [context] to rebuild any time that the [AdaptiveLayoutData.padding]
+  /// property of the ancestor [AdaptiveLayout] changes.
+  static double paddingOf(BuildContext context) {
+    return _of(context, _AdaptiveLayoutAspect.padding).padding;
+  }
+
+  /// Returns [AdaptiveLayoutData.margin] for the nearest [AdaptiveLayoutData] ancestor or null, if no such ancestor
+  /// exists.
+  ///
+  /// Use of this method will cause the given [context] to rebuild any time that the [AdaptiveLayoutData.padding]
+  /// property of the ancestor [AdaptiveLayout] changes.
+  static double? maybePaddingOf(BuildContext context) {
+    return _maybeOf(context, _AdaptiveLayoutAspect.padding)?.padding;
+  }
+
   /// Returns [AdaptiveLayoutData.spacing] for the nearest [AdaptiveLayoutData] ancestor or throws an exception, if no
   /// such ancestor exists.
   ///
@@ -369,6 +406,7 @@ class AdaptiveLayout extends InheritedModel<_AdaptiveLayoutAspect> {
           switch (dependency) {
             _AdaptiveLayoutAspect.type => data.layoutType != oldWidget.data.layoutType,
             _AdaptiveLayoutAspect.margin => data.margin != oldWidget.data.margin,
+            _AdaptiveLayoutAspect.padding => data.padding != oldWidget.data.padding,
             _AdaptiveLayoutAspect.spacing => data.spacing != oldWidget.data.spacing,
           };
     });
