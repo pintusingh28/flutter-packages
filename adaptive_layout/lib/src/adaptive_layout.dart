@@ -6,11 +6,14 @@ import 'package:flutter/widgets.dart';
 import 'breakpoints.dart';
 import 'layout_type.dart';
 
+const _kSpacing = 8;
+const _kMargin = 8;
+
 /// Specifies a part of [AdaptiveLayoutData] to depend on.
 ///
 /// [AdaptiveLayout] contains a large number of related properties. Widgets frequently depend on only a few of these
 /// attributes. For example, a widget that needs to rebuild when the [AdaptiveLayoutData.margin] changes does not need
-/// to be notified when the [AdaptiveLayoutData.spacer] changes. Specifying an aspect avoids unnecessary rebuilds.
+/// to be notified when the [AdaptiveLayoutData.spacing] changes. Specifying an aspect avoids unnecessary rebuilds.
 enum _AdaptiveLayoutAspect {
   /// Specifies the aspect corresponding to [AdaptiveLayoutData.layoutType].
   type,
@@ -18,8 +21,8 @@ enum _AdaptiveLayoutAspect {
   /// Specifies the aspect corresponding to [AdaptiveLayoutData.margin].
   margin,
 
-  /// Specifies the aspect corresponding to [AdaptiveLayoutData.spacer].
-  spacer;
+  /// Specifies the aspect corresponding to [AdaptiveLayoutData.spacing].
+  spacing;
 }
 
 /// Information about a layout of view.
@@ -42,7 +45,7 @@ class AdaptiveLayoutData {
   const AdaptiveLayoutData({
     required this.layoutType,
     required this.margin,
-    required this.spacer,
+    required this.spacing,
   });
 
   /// Creates data for a [AdaptiveLayout] based on the given `view`.
@@ -68,28 +71,28 @@ class AdaptiveLayoutData {
     return switch (availableWidth) {
       < AdaptiveLayoutBreakpoints.compat => const AdaptiveLayoutData(
           layoutType: AdaptiveLayoutType.compact,
-          margin: 16,
-          spacer: 16,
+          margin: _kMargin * 2,
+          spacing: _kSpacing * 2,
         ),
       < AdaptiveLayoutBreakpoints.medium => const AdaptiveLayoutData(
           layoutType: AdaptiveLayoutType.medium,
-          margin: 24,
-          spacer: 24,
+          margin: _kMargin * 3,
+          spacing: _kSpacing * 3,
         ),
       < AdaptiveLayoutBreakpoints.expanded => const AdaptiveLayoutData(
           layoutType: AdaptiveLayoutType.expanded,
-          margin: 24,
-          spacer: 24,
+          margin: _kMargin * 3,
+          spacing: _kSpacing * 3,
         ),
       < AdaptiveLayoutBreakpoints.large => const AdaptiveLayoutData(
           layoutType: AdaptiveLayoutType.large,
-          margin: 24,
-          spacer: 24,
+          margin: _kMargin * 4,
+          spacing: _kSpacing * 3,
         ),
       _ => const AdaptiveLayoutData(
           layoutType: AdaptiveLayoutType.extraLarge,
-          margin: 24,
-          spacer: 24,
+          margin: _kMargin * 4,
+          spacing: _kSpacing * 3,
         )
     };
   }
@@ -112,20 +115,20 @@ class AdaptiveLayoutData {
   ///
   /// See also:
   ///
-  ///  * [AdaptiveLayout.spacerOf], a method to find and depend on the spacer defined for a [BuildContext].
-  final double spacer;
+  ///  * [AdaptiveLayout.spacingOf], a method to find and depend on the spacing defined for a [BuildContext].
+  final double spacing;
 
   /// Creates a copy of this adaptive layout data but with the given fields replaced with the new values.
   AdaptiveLayoutData copyWith({
     AdaptiveLayoutType? type,
     double? margin,
-    double? spacer,
+    double? spacing,
     double? breakpoint,
   }) {
     return AdaptiveLayoutData(
       layoutType: type ?? layoutType,
       margin: margin ?? this.margin,
-      spacer: spacer ?? this.spacer,
+      spacing: spacing ?? this.spacing,
     );
   }
 
@@ -137,14 +140,14 @@ class AdaptiveLayoutData {
     return other is AdaptiveLayoutData &&
         other.layoutType == layoutType &&
         other.margin == margin &&
-        other.spacer == spacer;
+        other.spacing == spacing;
   }
 
   @override
   int get hashCode => Object.hashAll([
         layoutType,
         margin,
-        spacer,
+        spacing,
       ]);
 
   @override
@@ -152,7 +155,7 @@ class AdaptiveLayoutData {
     final List<String> properties = <String>[
       'type: $layoutType',
       'margin: $margin',
-      'gutter: $spacer',
+      'gutter: $spacing',
     ];
     return '${objectRuntimeType(this, 'AdaptiveLayoutData')}(${properties.join(', ')})';
   }
@@ -335,22 +338,22 @@ class AdaptiveLayout extends InheritedModel<_AdaptiveLayoutAspect> {
     return _maybeOf(context, _AdaptiveLayoutAspect.margin)?.margin;
   }
 
-  /// Returns [AdaptiveLayoutData.spacer] for the nearest [AdaptiveLayoutData] ancestor or throws an exception, if no
+  /// Returns [AdaptiveLayoutData.spacing] for the nearest [AdaptiveLayoutData] ancestor or throws an exception, if no
   /// such ancestor exists.
   ///
-  /// Use of this method will cause the given [context] to rebuild any time that the [AdaptiveLayoutData.spacer]
+  /// Use of this method will cause the given [context] to rebuild any time that the [AdaptiveLayoutData.spacing]
   /// property of the ancestor [AdaptiveLayout] changes.
-  static double spacerOf(BuildContext context) {
-    return _of(context, _AdaptiveLayoutAspect.spacer).spacer;
+  static double spacingOf(BuildContext context) {
+    return _of(context, _AdaptiveLayoutAspect.spacing).spacing;
   }
 
-  /// Returns [AdaptiveLayoutData.spacer] for the nearest [AdaptiveLayoutData] ancestor or null, if no such ancestor
+  /// Returns [AdaptiveLayoutData.spacing] for the nearest [AdaptiveLayoutData] ancestor or null, if no such ancestor
   /// exists.
   ///
-  /// Use of this method will cause the given [context] to rebuild any time that the [AdaptiveLayoutData.spacer]
+  /// Use of this method will cause the given [context] to rebuild any time that the [AdaptiveLayoutData.spacing]
   /// property of the ancestor [AdaptiveLayout] changes.
-  static double? maybeSpacerOf(BuildContext context) {
-    return _maybeOf(context, _AdaptiveLayoutAspect.spacer)?.spacer;
+  static double? maybeSpacingOf(BuildContext context) {
+    return _maybeOf(context, _AdaptiveLayoutAspect.spacing)?.spacing;
   }
 
   @override
@@ -366,7 +369,7 @@ class AdaptiveLayout extends InheritedModel<_AdaptiveLayoutAspect> {
           switch (dependency) {
             _AdaptiveLayoutAspect.type => data.layoutType != oldWidget.data.layoutType,
             _AdaptiveLayoutAspect.margin => data.margin != oldWidget.data.margin,
-            _AdaptiveLayoutAspect.spacer => data.spacer != oldWidget.data.spacer,
+            _AdaptiveLayoutAspect.spacing => data.spacing != oldWidget.data.spacing,
           };
     });
   }
