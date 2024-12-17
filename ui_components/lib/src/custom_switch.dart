@@ -107,15 +107,15 @@ class _CustomSwitchState extends State<CustomSwitch> with SingleTickerProviderSt
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
 
-    Color thumbColor = widget.thumbColor ?? colorScheme.onPrimary;
-    Color activeTrackColor = widget.activeTrackColor ?? colorScheme.primary;
-    Color inactiveTrackColor = widget.inactiveTrackColor ?? colorScheme.surfaceContainerHigh;
+    Color thumbColor = widget.thumbColor ?? theme.colorScheme.onPrimary;
+    Color activeTrackColor = widget.activeTrackColor ?? theme.colorScheme.primary;
+    Color inactiveTrackColor = widget.inactiveTrackColor ?? theme.disabledColor;
 
     if (widget.onChanged == null) {
-      activeTrackColor = Color.alphaBlend(activeTrackColor.withOpacity(0.5), colorScheme.surface);
-      inactiveTrackColor = Color.alphaBlend(inactiveTrackColor.withOpacity(0.5), colorScheme.surface);
+      activeTrackColor = Color.alphaBlend(activeTrackColor.withValues(alpha: 0.4), theme.colorScheme.surface);
+      inactiveTrackColor = Color.alphaBlend(inactiveTrackColor.withValues(alpha: 0.4), theme.colorScheme.surface);
     }
 
     Widget child = SizedBox(
@@ -178,7 +178,7 @@ class _SwitchThumbSplashPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
-    final splashPainter = Paint()..color = color.withOpacity(0.25);
+    final splashPainter = Paint()..color = color.withValues(alpha: 0.25);
     canvas.drawCircle(center, splashRadius, splashPainter);
   }
 

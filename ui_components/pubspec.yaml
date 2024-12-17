@@ -1,9 +1,11 @@
 name: ui_components
 description: "Ui components required for developing full-fledged flutter app."
-version: 0.0.1
+version: 0.0.1+2
+repository: https://github.com/pintusingh28/flutter-packages/tree/main/ui_components
+issue_tracker: https://github.com/pintusingh28/flutter-packages/issues
 
 environment:
-  sdk: '>=3.5.0 <4.0.0'
+  sdk: ^3.5.0
   flutter: ">=3.0.0"
 
 dependencies:
