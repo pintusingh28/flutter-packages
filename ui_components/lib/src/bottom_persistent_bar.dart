@@ -1,8 +1,7 @@
+import 'dart:math' as math;
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
-
-import 'safe_area_directional.dart';
 
 class BottomPersistenceBar extends StatelessWidget {
   const BottomPersistenceBar({
@@ -27,30 +26,26 @@ class BottomPersistenceBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final effectivePadding = calculateSafeAreaPadding(
-          top: false,
-          context: context,
-          maintainBottomViewPadding: maintainBottomViewPadding,
-          minimum: minimum ?? const EdgeInsets.fromLTRB(16, 16, 16, 8),
-        ) +
-        const EdgeInsets.only(bottom: 8);
+    assert(debugCheckHasMediaQuery(context));
+    assert(debugCheckHasDirectionality(context));
 
-    List<Widget> children = [];
-
-    if (spacing > 0) {
-      children = List.generate(
-        (children.length * 2) - 1,
-        (index) {
-          final int itemIndex = index ~/ 2;
-          if (index.isEven) {
-            return children[itemIndex];
-          }
-          return Gap(spacing);
-        },
+    EdgeInsets safeAreaPadding = MediaQuery.paddingOf(context);
+    if (maintainBottomViewPadding) {
+      EdgeInsets viewPadding = MediaQuery.viewPaddingOf(context);
+      safeAreaPadding = safeAreaPadding.copyWith(
+        bottom: math.max(safeAreaPadding.bottom, viewPadding.bottom),
       );
-    } else {
-      children = this.children;
     }
+
+    final TextDirection textDirection = Directionality.of(context);
+    final EdgeInsets effectiveMinimum = minimum?.resolve(textDirection) ?? const EdgeInsets.all(16);
+
+    final effectiveSafeAreaPadding = EdgeInsets.only(
+      left: math.max(safeAreaPadding.left, effectiveMinimum.left),
+      top: effectiveMinimum.top,
+      right: math.max(safeAreaPadding.right, effectiveMinimum.right),
+      bottom: math.max(safeAreaPadding.bottom + 8, effectiveMinimum.bottom),
+    );
 
     Widget child = MediaQuery.removePadding(
       context: context,
@@ -59,6 +54,7 @@ class BottomPersistenceBar extends StatelessWidget {
       removeLeft: true,
       removeRight: true,
       child: Flex(
+        spacing: spacing,
         direction: direction,
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
@@ -78,7 +74,7 @@ class BottomPersistenceBar extends StatelessWidget {
     }
 
     return Padding(
-      padding: effectivePadding,
+      padding: effectiveSafeAreaPadding,
       child: child,
     );
   }
