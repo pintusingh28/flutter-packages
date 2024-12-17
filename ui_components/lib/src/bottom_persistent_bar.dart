@@ -58,7 +58,7 @@ class BottomPersistenceBar extends StatelessWidget {
         direction: direction,
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: crossAxisAlignment,
         children: children,
       ),
     );
