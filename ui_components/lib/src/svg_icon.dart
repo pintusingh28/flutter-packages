@@ -34,7 +34,7 @@ class SvgIcon extends StatelessWidget {
 
     return SvgPicture.asset(
       icon,
-      fit: BoxFit.scaleDown,
+      fit: BoxFit.contain,
       theme: SvgTheme(currentColor: effectiveColor),
       colorFilter: ColorFilter.mode(effectiveColor, BlendMode.srcIn),
       width: effectiveSize,
