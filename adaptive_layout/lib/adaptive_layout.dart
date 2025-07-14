@@ -1,5 +1,5 @@
 /// Provides adaptive layout sizes for creating responsive design
-library adaptive_layout;
+library;
 
 export 'src/adaptive_layout.dart';
 export 'src/breakpoints.dart';
