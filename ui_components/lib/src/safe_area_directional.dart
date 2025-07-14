@@ -3,6 +3,37 @@ import 'dart:math' as math;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+/// Calculates the safe area padding for a given [BuildContext], allowing for
+/// directional control and minimum padding overrides.
+///
+/// This function is useful when you need to programmatically determine the
+/// effective safe area insets, potentially excluding certain sides or ensuring
+/// a minimum padding value. It also handles the `maintainBottomViewPadding`
+/// logic similar to [SafeArea].
+///
+/// Parameters:
+/// - [context]: The [BuildContext] from which to retrieve [MediaQueryData]
+///   and [Directionality].
+/// - [minimum]: An [EdgeInsetsGeometry] that specifies the minimum padding
+///   to apply. The calculated safe area padding for each side will be
+///   the maximum of the actual safe area inset and the corresponding minimum
+///   value. Defaults to [EdgeInsets.zero].
+/// - [start]: If `true`, the safe area padding for the start edge (left in LTR,
+///   right in RTL) is included. Defaults to `true`.
+/// - [top]: If `true`, the safe area padding for the top edge is included.
+///   Defaults to `true`.
+/// - [end]: If `true`, the safe area padding for the end edge (right in LTR,
+///   left in RTL) is included. Defaults to `true`.
+/// - [bottom]: If `true`, the safe area padding for the bottom edge is included.
+///   Defaults to `true`.
+/// - [maintainBottomViewPadding]: If `true`, the bottom padding will be at least
+///   the `MediaQuery.viewPadding.bottom`, which accounts for system overlays
+///   like the iPhone home indicator. Defaults to `false`.
+///
+/// Returns an [EdgeInsets] representing the calculated safe area padding.
+///
+/// Throws an assertion error if [debugCheckHasMediaQuery] or
+/// [debugCheckHasDirectionality] fail.
 EdgeInsets calculateSafeAreaPadding({
   required BuildContext context,
   EdgeInsetsGeometry minimum = EdgeInsets.zero,
@@ -26,6 +57,7 @@ EdgeInsets calculateSafeAreaPadding({
   final TextDirection textDirection = Directionality.of(context);
   final EdgeInsets effectiveMinimum = minimum.resolve(textDirection);
 
+  // Determine left/right based on text direction and start/end flags.
   final bool left = switch (textDirection) { TextDirection.ltr => start, TextDirection.rtl => end };
   final bool right = switch (textDirection) { TextDirection.rtl => start, TextDirection.ltr => end };
 
@@ -37,7 +69,36 @@ EdgeInsets calculateSafeAreaPadding({
   );
 }
 
+/// A widget that insets its child by a given padding, but only where the
+/// operating system's keyboard or other system UI would otherwise obscure the
+/// content. This version provides directional control (`start`, `end`)
+/// instead of explicit `left`, `right`.
+///
+/// This widget is a wrapper around [SafeArea] that interprets `start` and `end`
+/// properties based on the current [TextDirection].
+///
+/// Example:
+/// ```dart
+/// Scaffold(
+///   appBar: AppBar(title: const Text('My App')),
+///   body: SafeAreaDirectional(
+///     // Only apply padding to the top and start (left in LTR, right in RTL)
+///     bottom: false,
+///     end: false,
+///     child: ListView(
+///       children: const <Widget>[
+///         ListTile(title: Text('Item 1')),
+///         ListTile(title: Text('Item 2')),
+///         // ... more items
+///       ],
+///     ),
+///   ),
+/// );
+/// ```
 class SafeAreaDirectional extends StatelessWidget {
+  /// Creates a [SafeAreaDirectional] widget.
+  ///
+  /// The [child] must not be null.
   const SafeAreaDirectional({
     super.key,
     this.start = true,
@@ -49,12 +110,37 @@ class SafeAreaDirectional extends StatelessWidget {
     required this.child,
   });
 
+  /// Whether to avoid system intrusions on the start side of the screen.
+  ///
+  /// This corresponds to `left` in [TextDirection.ltr] and `right` in
+  /// [TextDirection.rtl]. Defaults to `true`.
   final bool start;
+
+  /// Whether to avoid system intrusions on the top side of the screen.
+  /// Defaults to `true`.
   final bool top;
+
+  /// Whether to avoid system intrusions on the end side of the screen.
+  ///
+  /// This corresponds to `right` in [TextDirection.ltr] and `left` in
+  /// [TextDirection.rtl]. Defaults to `true`.
   final bool end;
+
+  /// Whether to avoid system intrusions on the bottom side of the screen.
+  /// Defaults to `true`.
   final bool bottom;
+
+  /// Whether to maintain the bottom view padding, which includes the
+  /// keyboard and system overlays like the iPhone home indicator.
+  /// Defaults to `false`.
   final bool maintainBottomViewPadding;
+
+  /// The minimum padding to apply. The safe area padding for each side
+  /// will be the maximum of the actual safe area inset and the corresponding
+  /// minimum value. Defaults to [EdgeInsets.zero].
   final EdgeInsetsGeometry minimum;
+
+  /// The widget below this widget in the tree.
   final Widget child;
 
   @override
@@ -85,7 +171,43 @@ class SafeAreaDirectional extends StatelessWidget {
   }
 }
 
+/// A sliver widget that insets its [sliver] by a given padding, but only where
+/// the operating system's keyboard or other system UI would otherwise obscure
+/// the content. This version provides directional control (`start`, `end`)
+/// instead of explicit `left`, `right`.
+///
+/// This widget is a wrapper around [SliverSafeArea] that interprets `start` and `end`
+/// properties based on the current [TextDirection].
+///
+/// Example:
+/// ```dart
+/// CustomScrollView(
+///   slivers: <Widget>[
+///     const SliverAppBar(
+///       title: Text('Sliver Safe Area Demo'),
+///       floating: true,
+///     ),
+///     SliverSafeAreaDirectional(
+///       // Only apply padding to the start (left in LTR, right in RTL)
+///       top: false,
+///       bottom: false,
+///       end: false,
+///       sliver: SliverList(
+///         delegate: SliverChildBuilderDelegate(
+///           (BuildContext context, int index) {
+///             return ListTile(title: Text('Item $index'));
+///           },
+///           childCount: 50,
+///         ),
+///       ),
+///     ),
+///   ],
+/// );
+/// ```
 class SliverSafeAreaDirectional extends StatelessWidget {
+  /// Creates a [SliverSafeAreaDirectional] widget.
+  ///
+  /// The [sliver] must not be null.
   const SliverSafeAreaDirectional({
     super.key,
     this.start = true,
@@ -96,11 +218,32 @@ class SliverSafeAreaDirectional extends StatelessWidget {
     required this.sliver,
   });
 
+  /// Whether to avoid system intrusions on the start side of the screen.
+  ///
+  /// This corresponds to `left` in [TextDirection.ltr] and `right` in
+  /// [TextDirection.rtl]. Defaults to `true`.
   final bool start;
+
+  /// Whether to avoid system intrusions on the top side of the screen.
+  /// Defaults to `true`.
   final bool top;
+
+  /// Whether to avoid system intrusions on the end side of the screen.
+  ///
+  /// This corresponds to `right` in [TextDirection.ltr] and `left` in
+  /// [TextDirection.rtl]. Defaults to `true`.
   final bool end;
+
+  /// Whether to avoid system intrusions on the bottom side of the screen.
+  /// Defaults to `true`.
   final bool bottom;
+
+  /// The minimum padding to apply. The safe area padding for each side
+  /// will be the maximum of the actual safe area inset and the corresponding
+  /// minimum value. Defaults to [EdgeInsets.zero].
   final EdgeInsetsGeometry minimum;
+
+  /// The sliver widget below this widget in the tree.
   final Widget sliver;
 
   @override

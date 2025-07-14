@@ -1,6 +1,6 @@
 name: ui_components
 description: "Ui components required for developing full-fledged flutter app."
-version: 0.0.1+4
+version: 1.0.0+5
 repository: https://github.com/pintusingh28/flutter-packages/tree/main/ui_components
 issue_tracker: https://github.com/pintusingh28/flutter-packages/issues
 
@@ -12,10 +12,10 @@ dependencies:
   flutter:
     sdk: flutter
   gap: ^3.0.1
-  flutter_svg: ^2.0.10+1
+  flutter_svg: ^2.2.0
 
 dev_dependencies:
-  flutter_lints: ^4.0.0
+  flutter_lints: ^6.0.0
 
 flutter:
   uses-material-design: true
