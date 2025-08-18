@@ -31,7 +31,8 @@ class Country {
       name: map['name'] as String,
       isoCode: map['isoCode'] as String,
       iso3Code: map['iso3Code'] as String,
-      phoneDetail: PhoneDetail.fromJson(map['phoneDetail'] as Map<String, dynamic>),
+      phoneDetail:
+          PhoneDetail.fromJson(map['phoneDetail'] as Map<String, dynamic>),
       translations: Map<String, String>.from(map['translations'] as Map),
     );
   }
@@ -66,15 +67,16 @@ class Country {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-          other is Country &&
-              runtimeType == other.runtimeType &&
-              name == other.name &&
-              isoCode == other.isoCode &&
-              iso3Code == other.iso3Code &&
-              phoneDetail == other.phoneDetail &&
-              // Consider deep equality for maps if necessary,
-              // though for simple String maps, default equality might be fine.
-              translations.toString() == other.translations.toString(); // Basic map comparison
+      other is Country &&
+          runtimeType == other.runtimeType &&
+          name == other.name &&
+          isoCode == other.isoCode &&
+          iso3Code == other.iso3Code &&
+          phoneDetail == other.phoneDetail &&
+          // Consider deep equality for maps if necessary,
+          // though for simple String maps, default equality might be fine.
+          translations.toString() ==
+              other.translations.toString(); // Basic map comparison
 
   @override
   int get hashCode =>
@@ -112,13 +114,16 @@ class PhoneDetail {
     );
   }
 
-  /// The international direct dialing (IDD) code, also known as the country calling code (e.g., "+1", "44").
+  /// The international direct dialing (IDD) code, also known as the country
+  /// calling code (e.g., "+1", "44").
   final String code;
 
-  /// The typical maximum length of a national significant number (excluding the country code).
+  /// The typical maximum length of a national significant number (excluding
+  /// the country code).
   final int maxLength;
 
-  /// The typical minimum length of a national significant number (excluding the country code).
+  /// The typical minimum length of a national significant number (excluding
+  /// the country code).
   final int minLength;
 
   /// Converts this [PhoneDetail] instance to a JSON map.
@@ -133,11 +138,11 @@ class PhoneDetail {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-          other is PhoneDetail &&
-              runtimeType == other.runtimeType &&
-              code == other.code &&
-              maxLength == other.maxLength &&
-              minLength == other.minLength;
+      other is PhoneDetail &&
+          runtimeType == other.runtimeType &&
+          code == other.code &&
+          maxLength == other.maxLength &&
+          minLength == other.minLength;
 
   @override
   int get hashCode => code.hashCode ^ maxLength.hashCode ^ minLength.hashCode;

@@ -19,12 +19,21 @@ It is a data-only package, containing no UI components, making it flexible and l
 
 This package is intended for use as a core library. Add the dependency to your `pubspec.yaml` file.
 
+### From a Git Repository
+
 ```yaml
 dependencies:
-  ui_components:
+  country_picker_core:
     git:
       url: https://github.com/pintusingh28/flutter-packages
       path: country_picker_core
+```
+
+### From pub.dev
+
+```yaml
+dependencies:
+  country_picker_core: ^0.0.1
 ```
 
 ## Usage
