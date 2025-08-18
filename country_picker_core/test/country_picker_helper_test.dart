@@ -1,5 +1,5 @@
 import 'package:country_picker_core/country_picker_core.dart';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:test/test.dart';
 
 void main() {
   group('getCountryByPhoneCode', () {

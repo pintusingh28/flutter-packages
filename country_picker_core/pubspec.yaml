@@ -1,18 +1,12 @@
 name: country_picker_core
 description: "Core library for country picker, providing a comprehensive list of countries and associated data models. Essential for building country selection features in Flutter applications."
-version: 0.0.1
+version: 0.0.2
 repository: https://github.com/pintusingh28/flutter-packages/tree/main/country_picker_core
 issue_tracker: https://github.com/pintusingh28/flutter-packages/issues
 
 environment:
   sdk: ^3.0.0
-  flutter: ">=3.0.0"
-
-dependencies:
-  flutter:
-    sdk: flutter
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  flutter_lints: ^6.0.0
+  lints: ^6.0.0
+  test: ^1.26.3
