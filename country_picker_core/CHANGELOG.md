@@ -24,4 +24,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Unit Tests:** Created a test suite for `CountryPickerHelper` to ensure the integrity and reliability of the lookup
   methods.
 - **Project Documentation:** Added a `README.md` file explaining the purpose of the library and how to use it.
-- **License:** Included the MIT License file.
+- **License:** Included the BSD 3-Clause License file.
