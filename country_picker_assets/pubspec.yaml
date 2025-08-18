@@ -1,0 +1,22 @@
+name: country_picker_assets
+description: "A companion package for Flutter that provides a comprehensive collection of country flag assets."
+version: 0.0.1
+repository: https://github.com/pintusingh28/flutter-packages/tree/main/country_picker_assets
+issue_tracker: https://github.com/pintusingh28/flutter-packages/issues
+
+environment:
+  sdk: ^3.9.0
+  flutter: ">=3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  assets:
+    - assets/
